@@ -1,7 +1,7 @@
 
 
-### Night-Vision uses Svelte under the hood
-<h1>Yes, you've heard it right - there is a better framework for this particular task. It was decided to use Svelte for its performance, simplicity and ability to make development really fast. But we have to emphasize the "under the hood" part. The new library provides a vanilla-js API and can be used with any framework (Vue, React and Svelte itself). <h1>
+# Night-Vision uses Svelte under the hood
+<h2>Yes, you've heard it right - there is a better framework for this particular task. It was decided to use Svelte for its performance, simplicity and ability to make development really fast. But we have to emphasize the "under the hood" part. The new library provides a vanilla-js API and can be used with any framework (Vue, React and Svelte itself). <h2>
 
 
 # vue3-nightvision-graph
