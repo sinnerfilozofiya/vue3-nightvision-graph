@@ -13,6 +13,13 @@ body {
 <div class="button-group">
   <button id="loading">Loading...</button>
 </div>
+<label for="intervalSelect">Select Interval:</label>
+<select id="intervalSelect">
+  <option value="1m">1 minutes</option>
+  <option value="5m">5 minutes</option>
+  <option value="15m">15 minutes</option>
+  <option value="30m">30 minutes</option>
+</select>
 <div id="chart-container"></div>
 `;
 
@@ -27,8 +34,18 @@ let chart = new NightVision("chart-container", {
     grid: "#2e2f3055"
   }
 });
+document.getElementById("intervalSelect").addEventListener("change", () => {
+  const selectedInterval = document.getElementById("intervalSelect").value;
+  interval = selectedInterval;
+  dl.updateInterval(interval)
+  dl.load((data) => {
+    chart.data = data;
+    el("loading").hidden = true;
+  });
+});
 
-let dl = new DataLoader();
+let interval = '5m'
+let dl = new DataLoader(interval);
 
 // Load the first piece of the data
 dl.load((data) => {
@@ -62,7 +79,7 @@ setInterval(loadMore, 500);
 
 // Setup a trade data stream
 // (from FTX,)
-wsx.init(["APE-PERP"]);
+wsx.init(["btcusdt",interval]);
 wsx.ontrades = (d) => {
   if (!chart.hub.mainOv) return;
   let data = chart.hub.mainOv.data;
@@ -70,7 +87,7 @@ wsx.ontrades = (d) => {
     price: d.price,
     volume: d.price * d.size
   };
-  if (sampler(data, trade)) {
+  if (sampler(data, trade,interval)) {
     chart.update("data"); // New candle
   } else {
     chart.update(); // Candle update

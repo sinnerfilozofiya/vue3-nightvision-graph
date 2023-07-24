@@ -9,16 +9,16 @@ function init(syms) {
 }
 
 function startWebSocket(syms) {
-  const symbol = 'btcusdt';
-  const interval = '5m';
-  const url = `wss://stream.binance.com:9443/ws/btcusdt@kline_1m`;
+  console.log(syms)
+  const symbol = syms[0];
+  const interval = syms[1];
+  const url = `wss://stream.binance.com:9443/ws/${symbol}@kline_${interval}`;
 
   binanceWebSocket = new WebSocket(url);
   binanceWebSocket.onmessage = function (event) {
     try {
       const message = JSON.parse(event.data);
       if (message.e = "kline") {
-        console.log('1111')
         const klineData = message.k;
         _ontrades({
           price: parseFloat(klineData.c),

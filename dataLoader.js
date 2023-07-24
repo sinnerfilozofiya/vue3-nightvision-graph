@@ -1,12 +1,14 @@
 class DataLoader {
-  constructor() {
+  constructor(TF) {
     this.URL = "https://api1.binance.com/api/v3/klines";
     this.SYM = "BTCUSDT";
-    this.TF = "1m"; // See binance api definitions
+    this.TF = TF; // See binance api definitions
 
     this.loading = false;
   }
-
+  updateInterval(newInterval) {
+    this.TF = newInterval;
+  }
   async load(callback) {
     let url = `${this.URL}?symbol=${this.SYM}&interval=${this.TF}`;
     let result = await fetch(url);

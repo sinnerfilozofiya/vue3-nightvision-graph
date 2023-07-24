@@ -1,5 +1,7 @@
 // Make new candles from trade stream
-export default function sample(ohlcv, trade, tf = 60000) {
+export default function sample(ohlcv, trade, tf = '5m') {
+  tf = parseInt(tf) * 60000
+  console.log(tf)
   let last = ohlcv[ohlcv.length - 1];
   if (!last) return;
 
