@@ -1,5 +1,5 @@
 {
-  "name": "websocket",
+  "name": "playing-around-10",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,9 +9,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^4.4.0"
+    "vite": "3.2.1"
   },
   "dependencies": {
-    "night-vision": "^0.3.3"
-  }
+    "night-vision": "0.3.2"
+  },
+  "keywords": [],
+  "description": ""
 }
