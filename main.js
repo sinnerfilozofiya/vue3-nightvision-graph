@@ -3,6 +3,12 @@ import { NightVision } from "night-vision";
 import { DataLoader } from "./dataLoader.js";
 import wsx from "./wsx.js";
 import sampler from "./ohlcvSampler.js";
+import ovData1 from "./overlay-data.json";
+import smaData from "./sma-data.json"
+import rsiData from "./rsi-data.json"
+import generateSmaMockData from "./mock_sma_generator"
+import generateRsiMockData from "./mock_rsi_generator"
+
 
 document.querySelector("#app").innerHTML = `
 <style>
@@ -20,31 +26,60 @@ body {
   <option value="15m">15 minutes</option>
   <option value="30m">30 minutes</option>
 </select>
+<button id="overlay1">Add Pane</button>
+<button id="sma1">add sma</button>
+<button id="rsi1">add rsi</button>
 <div id="chart-container"></div>
 `;
+
 
 function el(id) {
   return document.getElementById(id);
 }
+function onbtn() {
+  let overlays = chart.data.panes[0].overlays;
+  overlays.push(ovData1);
+}
+function addRsi() {
+  const rsiMockData = generateRsiMockData(20)
+  rsiData.data = rsiMockData
+  chart.data.panes.push({
+    settings:{},
+    overlays:[rsiData]
+  })
+  chart.update()
+}
+function addSma() {
+  const smaMockData = generateSmaMockData(20)
+  smaData.data  = smaMockData
+  let overlays = chart.data.panes[0].overlays;
+  overlays.push(smaData);
+  chart.update()
+
+}
+overlay1.addEventListener("click",onbtn)
+sma1.addEventListener("click",addSma)
+rsi1.addEventListener("click",addRsi)
+
 
 let chart = new NightVision("chart-container", {
-  autoResize: true,
+  autoResize: false,
   colors: {
     back: "#111113",
     grid: "#2e2f3055"
   }
 });
-document.getElementById("intervalSelect").addEventListener("change", () => {
+el("intervalSelect").addEventListener("change", () => {
   const selectedInterval = document.getElementById("intervalSelect").value;
   interval = selectedInterval;
   dl.updateInterval(interval)
   dl.load((data) => {
     chart.data = data;
     el("loading").hidden = true;
+    chart.fullReset()
   });
 });
-
-let interval = '5m'
+let interval = '1m'
 let dl = new DataLoader(interval);
 
 // Load the first piece of the data
