@@ -46,7 +46,7 @@ class DataLoader {
       parseFloat(x[2]),
       parseFloat(x[3]),
       parseFloat(x[4]),
-      parseFloat(x[7])
+      parseFloat(x[5])
     ];
   }
 }

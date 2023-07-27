@@ -120,7 +120,7 @@ wsx.ontrades = (d) => {
   let data = chart.hub.mainOv.data;
   let trade = {
     price: d.price,
-    volume: d.price * d.size
+    volume: d.volume
   };
   if (sampler(data, trade,interval)) {
     chart.update("data"); // New candle

@@ -21,7 +21,7 @@ export default function sample(ohlcv, trade, tf = '5m') {
     last[2] = Math.max(tick, last[2]);
     last[3] = Math.min(tick, last[3]);
     last[4] = tick;
-    last[5] += volume;
+    last[5] = volume;
     return false; // Make regular('update')
   }
 
