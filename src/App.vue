@@ -28,7 +28,7 @@
 
         
           
-          <select  style="margin-right: 1%;"  id="indicatorDropdown" @select="handleSelectChange">
+          <select  style="margin-right: 1%;"  id="indicatorDropdown">
             <option value="" disabled selected>Select an Indicator</option>
             <option value="ema_ind">Exponential Moving Average (EMA)</option>
             <option value="rsi_ind">Relative Strength Index (RSI)</option>
@@ -73,16 +73,6 @@ export default {
       chart.data.panes[0].overlays[4].props.clear = true
       chart.update("data")
     },
-    handleSelectChange(event) {
-      let indi = event.target.value;
-      console.log(indi)
-      if (el(indi)=== "ema_ind") {
-        addEMA()
-      } if (el(indi) === "rsi_ind") {
-        addRSI()
-      }
-    }
-    
   },
   mounted() {
 
@@ -193,13 +183,13 @@ export default {
       chart.update()
     }
 
-    el("indicatorDropdown").addEventListener("select", () => {
+    el("indicatorDropdown").addEventListener("change", () => {
       if (el("indicatorDropdown").value === "ema_ind") {
         addEMA()
       } if (el("indicatorDropdown").value === "rsi_ind") {
         addRSI()
       }
-
+      el("indicatorDropdown").value = ""
     });
 
 
