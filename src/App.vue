@@ -81,6 +81,7 @@ export default {
 
     let chart = new NightVision("chart-container", {
       autoResize: true,
+      config: { MAX_ZOOM: 500},
       scripts: custom_scripts,
       height:this.charthight,
       colors: {
@@ -228,6 +229,7 @@ export default {
         el("loading").hidden = false;
         dl.loadMore(t0 - 1, (chunk) => {
           data.unshift(...chunk);
+          chart.data.panes[0].overlays[0].data = data
           chart.data.panes[0].overlays[1].data = data
           chart.data.panes[0].overlays[2].data = data
 
