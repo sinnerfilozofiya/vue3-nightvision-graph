@@ -277,8 +277,11 @@ export default {
       wsx.init([selectpair.toLowerCase(), interval]);
     });
 
-
     window.chart = chart;
+
+
+  
+
   }
 
 };

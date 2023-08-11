@@ -102,6 +102,27 @@ class DataLoader {
                 clear: false,
               }
             },
+            {
+              name:"built in boolinger bands",
+              type: "BoolingerBands",
+              data: data.map((x) => this.format(x)),
+              props: {
+                prop_bb_period: 30,
+                prop_bb_std: 2,
+                rsi_color: "#00ff00",
+                BB: function (inputList ,Period = 30 ,std = 2) {
+                  const modifiedList_bb = [];
+                  const bb_now = new BollingerBands(Period, std);
+                  for (let i = 0; i < inputList.length; i++) {
+                    const bb_set = bb_now.nextValue(inputList[i][4]);
+                    if (bb_set) {
+                      modifiedList_bb.push([inputList[i][0], bb_set.upper, bb_set.middle, bb_set.lower])
+                    }
+                  };
+                  return modifiedList_bb;
+                }
+              }
+            },
 
           ],
         },
