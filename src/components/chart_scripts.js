@@ -744,68 +744,61 @@ export const custom_scripts = [
 
 [OVERLAY name=BoolingerBands, ctx=Canvas, verion=1.0.0]
 
-// Overlay props
-prop('color', { type: 'Color', def: '#b41d70' })
-prop('backColor', { type: 'Color', def: $props.color + '11' })
-prop('lineWidth', { type: 'number', def: 1 })
-prop('showMid', { type: 'boolean', def: true })
-
-
-let data = $props.BB($core.data ,30 , 2 )//
-// Draw call
 draw(ctx) {
-     // Background
-    
-    const view = $core.view
-    const layout = $core.layout
-    ctx.beginPath()
-    ctx.fillStyle = $props.backColor
-    for (var i = view.i1, n = view.i2; i <= n; i++) {
-        let p = data[i]
-        let x = layout.ti2x(p[0], i)
-        let y = layout.value2y(p[1] || undefined)
-        ctx.lineTo(x, y)
-    }
-    for (var i = view.i2, i1 = view.i1; i >= i1; i--) {
-        let p = data[i]
-        let x = layout.ti2x(p[0], i)
-        let y = layout.value2y(p[3] || undefined)
-        ctx.lineTo(x, y)
-    }
-    ctx.fill()
-    // Lines
-    // TODO: can be faster by combining line
-    // into one path with moveTo in b/w
-    ctx.lineWidth = $props.lineWidth
-    ctx.strokeStyle = $props.color
-    // Top line
-    ctx.beginPath()
-    for (var i = view.i1, n = view.i2; i <= n; i++) {
-        let p = data[i]
-        let x = layout.ti2x(p[0], i)
-        let y = layout.value2y(p[1] || undefined)
-        ctx.lineTo(x, y)
-    }
-    ctx.stroke()
-    // Bottom line
-    ctx.beginPath()
-    for (var i = view.i1, n = view.i2; i <= n; i++) {
-        let p = data[i]
-        let x = layout.ti2x(p[0], i)
-        let y = layout.value2y(p[3] || undefined)
-        ctx.lineTo(x, y)
-    }
-    ctx.stroke()
-    // Middle line
-    if (!$props.showMid) return
-    ctx.beginPath()
-    for (var i = 0; i < data.length; i++) {
-        let p = data[i]
-        let x = layout.ti2x(p[0], i)
-        let y = layout.value2y(p[2] || undefined)
-        ctx.lineTo(x, y)
-    }
-    ctx.stroke()
+  const data = $props.BB($core.data, 30, 2);
+  const view = $core.view;
+  const layout = $core.layout;
+  
+  ctx.lineWidth = $props.lineWidth;
+  ctx.strokeStyle = $props.color;
+
+  // Draw Background
+  ctx.beginPath();
+  ctx.fillStyle = $props.backColor;
+
+  for (var i = 0; i < data.length; i++) {
+      let p = data[i];
+      let x = layout.ti2x(p[0], i);
+      let yTop = layout.value2y(p[1] || undefined);
+      let yBottom = layout.value2y(p[3] || undefined);
+
+      ctx.lineTo(x, yTop);
+      ctx.lineTo(x, yBottom);
+  }
+
+  ctx.fill();
+
+  // Draw Top Line
+  ctx.beginPath();
+  for (var i = 0; i < data.length; i++) {
+      let p = data[i];
+      let x = layout.ti2x(p[0], i);
+      let yTop = layout.value2y(p[1] || undefined);
+      ctx.lineTo(x, yTop);
+  }
+  ctx.stroke();
+
+  // Draw Bottom Line
+  ctx.beginPath();
+  for (var i = 0; i < data.length; i++) {
+      let p = data[i];
+      let x = layout.ti2x(p[0], i);
+      let yBottom = layout.value2y(p[3] || undefined);
+      ctx.lineTo(x, yBottom);
+  }
+  ctx.stroke();
+
+  // Draw Middle Line
+  
+      ctx.beginPath();
+      for (var i = 0; i < data.length; i++) {
+          let p = data[i];
+          let x = layout.ti2x(p[0], i);
+          let yMiddle = layout.value2y(p[2] || undefined);
+          ctx.lineTo(x, yMiddle);
+      
+      ctx.stroke();
+  }
 }
   
 yRange(hi, lo) => [

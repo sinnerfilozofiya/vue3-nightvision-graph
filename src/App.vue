@@ -8,7 +8,7 @@
       <div class="buttons-container">
 
 
-       
+
         <select style="margin-right: 1%;" id="pairselect">
           <option value="BTCUSDT">Bitcoin</option>
           <option value="ETHUSDT">Ethereum</option>
@@ -16,7 +16,7 @@
         </select>
 
 
-        
+
         <select style="margin-right: 1%;" id="intervalSelect">
           <option value="1m">1M</option>
           <option value="5m">5M</option>
@@ -26,19 +26,19 @@
 
 
 
-        
-          
-          <select  style="margin-right: 1%;"  id="indicatorDropdown">
-            <option value="" disabled selected>Select an Indicator</option>
-            <option value="ema_ind">Exponential Moving Average (EMA)</option>
-            <option value="rsi_ind">Relative Strength Index (RSI)</option>
-          </select>
-        
-        
-          <button style="margin-right: 1%;" @click="measurebutton">Measure</button>
-          <button style="margin-right: 1%;" @click="trendlinebutton">Trendline</button>
-          <button style="margin-right: 1%;" @click="clearButton">Clear Lines</button>
-        
+
+
+        <select style="margin-right: 1%;" id="indicatorDropdown">
+          <option value="" disabled selected>Select an Indicator</option>
+          <option value="ema_ind">Exponential Moving Average (EMA)</option>
+          <option value="rsi_ind">Relative Strength Index (RSI)</option>
+        </select>
+
+
+        <button style="margin-right: 1%;" @click="measurebutton">Measure</button>
+        <button style="margin-right: 1%;" @click="trendlinebutton">Trendline</button>
+        <button style="margin-right: 1%;" @click="clearButton">Clear Lines</button>
+
       </div>
       <!-- the chart div -->
       <div id="chart-container"></div>
@@ -55,21 +55,22 @@ import sampler from "./components/ohlcvSampler.js";
 import { RSI, BollingerBands, EMA } from '@debut/indicators';
 import { custom_scripts } from './components/chart_scripts';
 export default {
-  data () {return{
-      charthight:500
+  data() {
+    return {
+      charthight: 500
     }
   },
   methods: {
-    measurebutton(){
+    measurebutton() {
       // Modify the values of the list items here
       chart.data.panes[0].overlays[3].props.state_manager = true
       chart.update("data")
     },
-    trendlinebutton(){
+    trendlinebutton() {
       chart.data.panes[0].overlays[4].props.state_manager = true
       chart.update("data")
     },
-    clearButton(){
+    clearButton() {
       chart.data.panes[0].overlays[4].props.clear = true
       chart.update("data")
     },
@@ -81,9 +82,9 @@ export default {
 
     let chart = new NightVision("chart-container", {
       autoResize: true,
-      config: { MAX_ZOOM: 500},
+      config: { MAX_ZOOM: 500 },
       scripts: custom_scripts,
-      height:this.charthight,
+      height: this.charthight,
       colors: {
         back: "#111113",
         grid: "#2e2f3055"
@@ -184,9 +185,40 @@ export default {
       chart.update()
     }
 
+    function addBB() {
+      let bb_object = {
+        name: "built in boolinger bands",
+        type: "BoolingerBands",
+        data: chart.data.panes[0].overlays[0].data,
+        props: {
+          prop_bb_period: 30,
+          prop_bb_std: 2,
+          rsi_color: "#00ff00",
+          BB: function (inputList, Period = 30, std = 2) {
+            const modifiedList_bb = [];
+            const bb_now = new BollingerBands(Period, std);
+            for (let i = 0; i < inputList.length; i++) {
+              const bb_set = bb_now.nextValue(inputList[i][4]);
+              if (bb_set) {
+                modifiedList_bb.push([inputList[i][0], bb_set.upper, bb_set.middle, bb_set.lower])
+              }
+            };
+            return modifiedList_bb;
+          }
+        }
+      }
+      let overlays = chart.data.panes[0].overlays;
+
+      overlays.push(bb_object);
+      chart.update()
+
+
+    }
+
     el("indicatorDropdown").addEventListener("change", () => {
       if (el("indicatorDropdown").value === "ema_ind") {
-        addEMA()
+        //addEMA()
+        addBB()
       } if (el("indicatorDropdown").value === "rsi_ind") {
         addRSI()
       }
@@ -280,7 +312,7 @@ export default {
     window.chart = chart;
 
 
-  
+
 
   }
 
@@ -296,16 +328,16 @@ export default {
 
 
 <style scoped>
-
 .main-container {
   width: 100%;
   display: flex;
   flex-direction: column;
 
 }
+
 .buttons-container {
   background-color: transparent;
-  flex: 10%; 
+  flex: 10%;
   width: 100%;
   display: flex;
   justify-content: flex-start;
@@ -314,10 +346,10 @@ export default {
 
   background-color: #f0f0f0;
 }
+
 .chart-container {
-  flex: 90%; /* 90% height for chart */
+  flex: 90%;
+  /* 90% height for chart */
   background-color: #ffffff;
 }
-
-
 </style>
