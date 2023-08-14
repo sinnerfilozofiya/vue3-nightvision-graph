@@ -744,62 +744,77 @@ export const custom_scripts = [
 
 [OVERLAY name=BoolingerBands, ctx=Canvas, verion=1.0.0]
 
+
+
 draw(ctx) {
   const data = $props.BB($core.data, 30, 2);
   const view = $core.view;
   const layout = $core.layout;
-  
+
   ctx.lineWidth = $props.lineWidth;
-  ctx.strokeStyle = $props.color;
+  ctx.strokeStyle = 'white';
 
   // Draw Background
   ctx.beginPath();
   ctx.fillStyle = $props.backColor;
 
-  for (var i = 0; i < data.length; i++) {
+  let prevYTop = null;
+  let prevYBottom = null;
+
+  for (var i = view.i1, n = view.i2; i <= n; i++) {
       let p = data[i];
       let x = layout.ti2x(p[0], i);
       let yTop = layout.value2y(p[1] || undefined);
       let yBottom = layout.value2y(p[3] || undefined);
 
+      if (prevYTop !== null && prevYBottom !== null) {
+          ctx.lineTo(x, prevYTop);
+          ctx.lineTo(x, prevYBottom);
+      }
+      
       ctx.lineTo(x, yTop);
       ctx.lineTo(x, yBottom);
+
+      prevYTop = yTop;
+      prevYBottom = yBottom;
   }
 
+  ctx.closePath();
   ctx.fill();
 
-  // Draw Top Line
+  // Draw Top and Bottom Lines
   ctx.beginPath();
-  for (var i = 0; i < data.length; i++) {
+  for (var i = view.i1, n = view.i2; i <= n; i++) {
       let p = data[i];
       let x = layout.ti2x(p[0], i);
       let yTop = layout.value2y(p[1] || undefined);
-      ctx.lineTo(x, yTop);
-  }
-  ctx.stroke();
-
-  // Draw Bottom Line
-  ctx.beginPath();
-  for (var i = 0; i < data.length; i++) {
-      let p = data[i];
-      let x = layout.ti2x(p[0], i);
       let yBottom = layout.value2y(p[3] || undefined);
+
+      // Draw top line
+      ctx.lineTo(x, yTop);
+
+      // Draw bottom line
       ctx.lineTo(x, yBottom);
   }
   ctx.stroke();
 
   // Draw Middle Line
-  
+  if ($props.showMid) {
       ctx.beginPath();
       for (var i = 0; i < data.length; i++) {
           let p = data[i];
           let x = layout.ti2x(p[0], i);
           let yMiddle = layout.value2y(p[2] || undefined);
           ctx.lineTo(x, yMiddle);
-      
+      }
       ctx.stroke();
   }
 }
+
+
+
+
+
   
 yRange(hi, lo) => [
   Math.max(hi, $props.upperBand),
